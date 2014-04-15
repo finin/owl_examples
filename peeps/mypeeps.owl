@@ -35,33 +35,33 @@
 #################################################################
 
 
-###  http://www.semanticweb.org/ontologies/2014/3/mypeeps#Alan
+###  http://www.semanticweb.org/ontologies/2014/3/mypeeps#alan
 
-:Alan rdf:type <http://ebiq.org/ontologies/peeps/#Person> ,
+:alan rdf:type <http://ebiq.org/ontologies/peeps/#Person> ,
                owl:NamedIndividual ;
       
-      <http://ebiq.org/ontologies/peeps/#has_sex> "male" .
+      <http://ebiq.org/ontologies/peeps/#hasSex> "male"^^xsd:string .
 
 
 
-###  http://www.semanticweb.org/ontologies/2014/3/mypeeps#Bob
+###  http://www.semanticweb.org/ontologies/2014/3/mypeeps#bob
 
-:Bob rdf:type <http://ebiq.org/ontologies/peeps/#Man> ,
+:bob rdf:type <http://ebiq.org/ontologies/peeps/#Man> ,
               owl:NamedIndividual ;
      
-     <http://ebiq.org/ontologies/peeps/#has_age> 6 ;
+     <http://ebiq.org/ontologies/peeps/#hasAge> 6 ;
      
-     <http://ebiq.org/ontologies/peeps/#has_parent> :Carol .
+     <http://ebiq.org/ontologies/peeps/#hasParent> :carol .
 
 
 
-###  http://www.semanticweb.org/ontologies/2014/3/mypeeps#Carol
+###  http://www.semanticweb.org/ontologies/2014/3/mypeeps#carol
 
-:Carol rdf:type <http://ebiq.org/ontologies/peeps/#Person> ,
+:carol rdf:type <http://ebiq.org/ontologies/peeps/#Person> ,
                 <http://ebiq.org/ontologies/peeps/#Woman> ,
                 owl:NamedIndividual ;
        
-       <http://ebiq.org/ontologies/peeps/#has_sex> "female" .
+       <http://ebiq.org/ontologies/peeps/#hasSex> "female"^^xsd:string .
 
 
 
