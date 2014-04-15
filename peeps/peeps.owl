@@ -1,0 +1,400 @@
+@prefix : <http://ebiq.org/ontologies/peeps/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix peeps: <http://ebiq.org/ontologies/peeps/#> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@base <http://ebiq.org/ontologies/peeps/> .
+
+<http://ebiq.org/ontologies/peeps/> rdf:type owl:Ontology ;
+                                    
+                                    rdfs:label "An example ontology for people created in Protege OWL v4.3\"" .
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://ebiq.org/ontologies/peeps/hasChild
+
+:hasChild rdf:type owl:AsymmetricProperty ,
+                   owl:IrreflexiveProperty ,
+                   owl:ObjectProperty ;
+          
+          owl:inverseOf peeps:hasParent .
+
+
+
+###  http://ebiq.org/ontologies/peeps/hasMother
+
+:hasMother rdf:type owl:AsymmetricProperty ,
+                    owl:FunctionalProperty ,
+                    owl:IrreflexiveProperty ,
+                    owl:ObjectProperty ;
+           
+           rdfs:comment "" ;
+           
+           rdfs:domain peeps:Person ;
+           
+           rdfs:range peeps:Woman ;
+           
+           rdfs:subPropertyOf peeps:hasParent .
+
+
+
+###  http://ebiq.org/ontologies/peeps/olderThan
+
+:olderThan rdf:type owl:ObjectProperty ,
+                    owl:TransitiveProperty ;
+           
+           owl:inverseOf :youngerThan .
+
+
+
+###  http://ebiq.org/ontologies/peeps/youngerThan
+
+:youngerThan rdf:type owl:ObjectProperty ,
+                      owl:TransitiveProperty ;
+             
+             rdfs:comment "The is_yonger relation holds between two people if the the agent of the first is less than the age of the second." ;
+             
+             rdfs:domain peeps:Person ;
+             
+             rdfs:range peeps:Person .
+
+
+
+###  http://ebiq.org/ontologies/peeps/#hasGrandparent
+
+peeps:hasGrandparent rdf:type owl:ObjectProperty ;
+                     
+                     rdfs:comment "The parent of a parent is a grandparent." ;
+                     
+                     owl:propertyChainAxiom ( peeps:hasParent
+                                              peeps:hasParent
+                                            ) .
+
+
+
+###  http://ebiq.org/ontologies/peeps/#hasParent
+
+peeps:hasParent rdf:type owl:AsymmetricProperty ,
+                         owl:IrreflexiveProperty ,
+                         owl:ObjectProperty ;
+                
+                rdfs:comment "" ;
+                
+                rdfs:range peeps:Person ;
+                
+                rdfs:domain peeps:Person .
+
+
+
+
+
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+
+###  http://ebiq.org/ontologies/peeps/#hasAge
+
+peeps:hasAge rdf:type owl:DatatypeProperty ,
+                      owl:FunctionalProperty ;
+             
+             rdfs:comment "A person's age  in years" ;
+             
+             rdfs:domain peeps:Person ;
+             
+             rdfs:range xsd:nonNegativeInteger .
+
+
+
+###  http://ebiq.org/ontologies/peeps/#hasSex
+
+peeps:hasSex rdf:type owl:DatatypeProperty ,
+                      owl:FunctionalProperty ;
+             
+             rdfs:comment "The sex of a person, which must be a string which is either \"male\" or \"female\"" ;
+             
+             rdfs:domain peeps:Person ;
+             
+             rdfs:range [ rdf:type rdfs:Datatype ;
+                          owl:oneOf [ rdf:type rdf:List ;
+                                      rdf:first "female" ;
+                                      rdf:rest [ rdf:type rdf:List ;
+                                                 rdf:first "male" ;
+                                                 rdf:rest rdf:nil
+                                               ]
+                                    ]
+                        ] .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://ebiq.org/ontologies/peeps/Adult
+
+:Adult rdf:type owl:Class ;
+       
+       rdfs:label "Adult person" ;
+       
+       owl:equivalentClass [ rdf:type owl:Class ;
+                             owl:intersectionOf ( peeps:Person
+                                                  [ rdf:type owl:Restriction ;
+                                                    owl:onProperty peeps:hasAge ;
+                                                    owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                                         owl:onDatatype xsd:int ;
+                                                                         owl:withRestrictions ( [ xsd:minInclusive 18
+                                                                                                ]
+                                                                                              )
+                                                                       ]
+                                                  ]
+                                                )
+                           ] ;
+       
+       rdfs:subClassOf peeps:Person ;
+       
+       rdfs:comment "An Adult is a Person whose age is 18 or older." .
+
+
+
+###  http://ebiq.org/ontologies/peeps/Minor
+
+:Minor rdf:type owl:Class ;
+       
+       owl:equivalentClass [ rdf:type owl:Class ;
+                             owl:intersectionOf ( peeps:Person
+                                                  [ rdf:type owl:Restriction ;
+                                                    owl:onProperty peeps:hasAge ;
+                                                    owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                                         owl:onDatatype xsd:int ;
+                                                                         owl:withRestrictions ( [ xsd:maxExclusive 18
+                                                                                                ]
+                                                                                              )
+                                                                       ]
+                                                  ]
+                                                )
+                           ] ;
+       
+       rdfs:subClassOf peeps:Person .
+
+
+
+###  http://ebiq.org/ontologies/peeps/#Boy
+
+peeps:Boy rdf:type owl:Class ;
+          
+          rdfs:label "Boy" ;
+          
+          owl:equivalentClass [ rdf:type owl:Class ;
+                                owl:intersectionOf ( :Minor
+                                                     peeps:Man
+                                                   )
+                              ] ;
+          
+          rdfs:subClassOf peeps:Man ;
+          
+          rdfs:comment "A Boy is defined as the intersection of Man and Minor, i.e., a male person whose age is less than 18." .
+
+
+
+###  http://ebiq.org/ontologies/peeps/#Man
+
+peeps:Man rdf:type owl:Class ;
+          
+          rdfs:label "Male person" ;
+          
+          owl:equivalentClass [ rdf:type owl:Class ;
+                                owl:intersectionOf ( peeps:Person
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty peeps:hasSex ;
+                                                       owl:hasValue "male"
+                                                     ]
+                                                   )
+                              ] ;
+          
+          owl:disjointWith peeps:Woman ;
+          
+          rdfs:comment "A Man is defined as a person with a has_sex value equal to \"male\"." .
+
+
+
+###  http://ebiq.org/ontologies/peeps/#Person
+
+peeps:Person rdf:type owl:Class ;
+             
+             rdfs:label "Person" ;
+             
+             owl:equivalentClass [ rdf:type owl:Restriction ;
+                                   owl:onProperty peeps:hasParent ;
+                                   owl:onClass peeps:Woman ;
+                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty peeps:hasParent ;
+                                   owl:onClass peeps:Man ;
+                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                 ] ;
+             
+             rdfs:comment "A class representing a person.  We use an equivalent axiom and  restrictions to specify that every person nas one male parent and one dfemale parent.  We assert that Person is equivalent to the disjoint union of Man and Woman and also equivalent to the disjoint unionfn of Adult and Minor." ;
+             
+             owl:disjointUnionOf ( peeps:Man
+                                   peeps:Woman
+                                 ) ,
+                                 ( :Adult
+                                   :Minor
+                                 ) .
+
+
+
+###  http://ebiq.org/ontologies/peeps/#Woman
+
+peeps:Woman rdf:type owl:Class ;
+            
+            owl:equivalentClass [ rdf:type owl:Class ;
+                                  owl:intersectionOf ( peeps:Person
+                                                       [ rdf:type owl:Restriction ;
+                                                         owl:onProperty peeps:hasSex ;
+                                                         owl:hasValue "female"
+                                                       ]
+                                                     )
+                                ] ;
+            
+            rdfs:comment "A Woman is defined as a Person with a has_sex property whose value is \"female\"." .
+
+
+
+
+
+#################################################################
+#
+#    Individuals
+#
+#################################################################
+
+
+###  http://ebiq.org/ontologies/peeps/john
+
+:john rdf:type peeps:Person ,
+               owl:NamedIndividual ;
+      
+      peeps:hasAge 6 .
+
+
+
+###  http://ebiq.org/ontologies/peeps/mary
+
+:mary rdf:type peeps:Person ,
+               owl:NamedIndividual ;
+      
+      peeps:hasAge 10 .
+
+
+
+
+
+#################################################################
+#
+#    Rules
+#
+#################################################################
+
+
+<urn:swrl#p1> rdf:type swrl:Variable .
+<urn:swrl#a1> rdf:type swrl:Variable .
+<urn:swrl#p2> rdf:type swrl:Variable .
+<urn:swrl#a2> rdf:type swrl:Variable .
+[ rdf:type swrl:Imp ;
+  swrl:head [ rdf:type swrl:AtomList ;
+              rdf:rest rdf:nil ;
+              rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                          swrl:propertyPredicate :hasMother ;
+                          swrl:argument1 <urn:swrl#p1> ;
+                          swrl:argument2 <urn:swrl#p2>
+                        ]
+            ] ;
+  swrl:body [ rdf:type swrl:AtomList ;
+              rdf:rest [ rdf:type swrl:AtomList ;
+                         rdf:rest rdf:nil ;
+                         rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                                     swrl:propertyPredicate peeps:hasParent ;
+                                     swrl:argument1 <urn:swrl#p1> ;
+                                     swrl:argument2 <urn:swrl#p2>
+                                   ]
+                       ] ;
+              rdf:first [ rdf:type swrl:ClassAtom ;
+                          swrl:classPredicate peeps:Woman ;
+                          swrl:argument1 <urn:swrl#p2>
+                        ]
+            ]
+] .
+[ rdf:type swrl:Imp ;
+  swrl:head [ rdf:type swrl:AtomList ;
+              rdf:rest rdf:nil ;
+              rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                          swrl:propertyPredicate :youngerThan ;
+                          swrl:argument1 <urn:swrl#p1> ;
+                          swrl:argument2 <urn:swrl#p2>
+                        ]
+            ] ;
+  swrl:body [ rdf:type swrl:AtomList ;
+              rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                          swrl:propertyPredicate peeps:hasAge ;
+                          swrl:argument2 <urn:swrl#a1> ;
+                          swrl:argument1 <urn:swrl#p1>
+                        ] ;
+              rdf:rest [ rdf:type swrl:AtomList ;
+                         rdf:first [ rdf:type swrl:DatavaluedPropertyAtom ;
+                                     swrl:propertyPredicate peeps:hasAge ;
+                                     swrl:argument2 <urn:swrl#a2> ;
+                                     swrl:argument1 <urn:swrl#p2>
+                                   ] ;
+                         rdf:rest [ rdf:type swrl:AtomList ;
+                                    rdf:rest rdf:nil ;
+                                    rdf:first [ rdf:type swrl:BuiltinAtom ;
+                                                swrl:builtin swrlb:lessThan ;
+                                                swrl:arguments ( <urn:swrl#a1>
+                                                                 <urn:swrl#a2>
+                                                               )
+                                              ]
+                                  ]
+                       ]
+            ]
+] .
+[ rdf:type swrl:Imp ;
+  swrl:head [ rdf:type swrl:AtomList ;
+              rdf:rest rdf:nil ;
+              rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                          swrl:propertyPredicate :youngerThan ;
+                          swrl:argument1 <urn:swrl#p1> ;
+                          swrl:argument2 <urn:swrl#p2>
+                        ]
+            ] ;
+  swrl:body [ rdf:type swrl:AtomList ;
+              rdf:rest rdf:nil ;
+              rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                          swrl:propertyPredicate peeps:hasParent ;
+                          swrl:argument1 <urn:swrl#p1> ;
+                          swrl:argument2 <urn:swrl#p2>
+                        ]
+            ]
+] .
+
+###  Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net
+
