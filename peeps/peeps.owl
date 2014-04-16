@@ -243,12 +243,12 @@ peeps:Person rdf:type owl:Class ;
              
              owl:equivalentClass [ rdf:type owl:Restriction ;
                                    owl:onProperty peeps:hasParent ;
-                                   owl:onClass peeps:Woman ;
+                                   owl:onClass peeps:Man ;
                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                  ] ,
                                  [ rdf:type owl:Restriction ;
                                    owl:onProperty peeps:hasParent ;
-                                   owl:onClass peeps:Man ;
+                                   owl:onClass peeps:Woman ;
                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                  ] ;
              
@@ -277,33 +277,6 @@ peeps:Woman rdf:type owl:Class ;
                                 ] ;
             
             rdfs:comment "A Woman is defined as a Person with a has_sex property whose value is \"female\"." .
-
-
-
-
-
-#################################################################
-#
-#    Individuals
-#
-#################################################################
-
-
-###  http://ebiq.org/ontologies/peeps/john
-
-:john rdf:type peeps:Person ,
-               owl:NamedIndividual ;
-      
-      peeps:hasAge 6 .
-
-
-
-###  http://ebiq.org/ontologies/peeps/mary
-
-:mary rdf:type peeps:Person ,
-               owl:NamedIndividual ;
-      
-      peeps:hasAge 10 .
 
 
 
@@ -378,18 +351,18 @@ peeps:Woman rdf:type owl:Class ;
             ]
 ] .
 [ rdf:type swrl:Imp ;
-  swrl:head [ rdf:type swrl:AtomList ;
-              rdf:rest rdf:nil ;
-              rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
-                          swrl:propertyPredicate :youngerThan ;
-                          swrl:argument1 <urn:swrl#p1> ;
-                          swrl:argument2 <urn:swrl#p2>
-                        ]
-            ] ;
   swrl:body [ rdf:type swrl:AtomList ;
               rdf:rest rdf:nil ;
               rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
                           swrl:propertyPredicate peeps:hasParent ;
+                          swrl:argument1 <urn:swrl#p1> ;
+                          swrl:argument2 <urn:swrl#p2>
+                        ]
+            ] ;
+  swrl:head [ rdf:type swrl:AtomList ;
+              rdf:rest rdf:nil ;
+              rdf:first [ rdf:type swrl:IndividualPropertyAtom ;
+                          swrl:propertyPredicate :youngerThan ;
                           swrl:argument1 <urn:swrl#p1> ;
                           swrl:argument2 <urn:swrl#p2>
                         ]

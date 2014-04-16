@@ -13,23 +13,6 @@
 
 #################################################################
 #
-#    Object Properties
-#
-#################################################################
-
-
-###  http://www.semanticweb.org/ontologies/2014/3/mypeeps#younger
-
-:younger rdf:type owl:AsymmetricProperty ,
-                  owl:IrreflexiveProperty ,
-                  owl:ObjectProperty .
-
-
-
-
-
-#################################################################
-#
 #    Individuals
 #
 #################################################################
